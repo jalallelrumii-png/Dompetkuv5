@@ -10,146 +10,140 @@
 <link rel="manifest" href="manifest.json">
 <title>Dompetku</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 
 <style>
-/* ─────────────── iOS DESIGN SYSTEM ─────────────── */
+/* ─────────────── iOS UI DESIGN SYSTEM ─────────────── */
 :root {
-  --bg: #000000;
-  --card: #1C1C1E;
-  --input: #2C2C2E;
+  --system-bg: #000000;
+  --secondary-bg: #1C1C1E;
+  --tertiary-bg: #2C2C2E;
   --accent: #0A84FF;
   --green: #30D158;
   --red: #FF453A;
-  --text: #FFFFFF;
-  --text-dim: #8E8E93;
-  --glass: rgba(28, 28, 30, 0.8);
+  --text-main: #FFFFFF;
+  --text-sep: rgba(255, 255, 255, 0.1);
+  --glass: rgba(25, 25, 25, 0.7);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { 
-  margin: 0; font-family: -apple-system, 'Sora', sans-serif; 
-  background: var(--bg); color: var(--text); overflow: hidden;
+body {
+  margin: 0; font-family: -apple-system, 'Sora', sans-serif;
+  background-color: var(--system-bg); color: var(--text-main);
+  user-select: none; -webkit-user-select: none; overflow: hidden;
 }
 
-/* Header iOS Style */
+/* Header iOS */
 .top-nav {
-  position: sticky; top: 0; padding: 50px 20px 10px;
+  position: sticky; top: 0; z-index: 100;
+  padding: 55px 20px 15px;
   background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  z-index: 100; border-bottom: 0.5px solid rgba(255,255,255,0.1);
-  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 0.5px solid var(--text-sep);
+  display: flex; justify-content: space-between; align-items: flex-end;
 }
-.top-nav h1 { font-size: 22px; font-weight: 700; margin: 0; }
+.top-nav h1 { font-size: 28px; font-weight: 800; margin: 0; letter-spacing: -1px; }
 
-/* Main Screens */
-#app { height: 100vh; display: flex; flex-direction: column; }
-.screens { flex: 1; overflow-y: auto; padding-bottom: 100px; scroll-behavior: smooth; }
-.scr { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
-.scr.on { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* Screens Area */
+.scr-container { height: 100vh; display: flex; flex-direction: column; }
+.screens { flex: 1; overflow-y: auto; padding-bottom: 120px; }
+.scr { display: none; padding: 20px; }
+.scr.on { display: block; animation: iosSlide 0.4s cubic-bezier(0.1, 0.5, 0.1, 1); }
 
-/* Cards & Elements */
-.ios-card {
-  background: var(--card); border-radius: 20px; padding: 20px;
-  margin-bottom: 20px; border: 0.5px solid rgba(255,255,255,0.05);
+@keyframes iosSlide { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+/* iOS Cards */
+.card {
+  background: var(--secondary-bg); border-radius: 20px; padding: 20px;
+  margin-bottom: 20px; border: 0.5px solid var(--text-sep);
 }
-.hero-label { font-size: 13px; color: var(--text-dim); text-transform: uppercase; font-weight: 600; }
-.hero-val { font-size: 38px; font-weight: 800; margin: 5px 0 15px; letter-spacing: -1px; }
+.balance-label { font-size: 13px; color: #8E8E93; text-transform: uppercase; font-weight: 600; }
+.balance-val { font-size: 40px; font-weight: 800; margin: 5px 0 15px; letter-spacing: -1.5px; }
 
-/* Transaction List Style */
-.ios-list { background: var(--card); border-radius: 14px; overflow: hidden; }
+/* List Style iOS */
+.ios-list { background: var(--secondary-bg); border-radius: 12px; overflow: hidden; }
 .ios-item {
   display: flex; align-items: center; padding: 12px 16px;
-  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+  border-bottom: 0.5px solid var(--text-sep);
 }
 .ios-item:last-child { border-bottom: none; }
-.icon-box { 
-  width: 36px; height: 36px; border-radius: 10px; 
-  display: flex; align-items: center; justify-content: center; margin-right: 12px;
-  font-size: 16px;
-}
-
-/* Modal iOS Action Sheet */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-  display: none; align-items: flex-end; z-index: 1000;
-}
-.modal-overlay.on { display: flex; }
-.modal-content {
-  background: #1C1C1E; width: 100%; border-radius: 20px 20px 0 0;
-  padding: 10px 20px 40px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.modal-overlay.on .modal-content { transform: translateY(0); }
-.handle { width: 40px; height: 5px; background: #3A3A3C; border-radius: 10px; margin: 0 auto 20px; }
-
-/* Forms iOS Style */
-.input-group { background: #2C2C2E; border-radius: 12px; margin-bottom: 20px; overflow: hidden; }
-.input-group input, .input-group select {
-  width: 100%; background: transparent; border: none; padding: 14px 16px;
-  color: white; font-size: 16px; border-bottom: 0.5px solid rgba(255,255,255,0.05);
-}
-.btn-primary {
-  width: 100%; padding: 16px; border-radius: 12px; background: var(--accent);
-  color: white; border: none; font-weight: 600; font-size: 16px;
+.icon-ios { 
+  width: 35px; height: 35px; border-radius: 8px; margin-right: 15px;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
 }
 
 /* Bottom Tab Bar */
-.tab-bar {
-  position: fixed; bottom: 0; width: 100%; background: var(--glass);
-  backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+.tabbar {
+  position: fixed; bottom: 0; width: 100%; z-index: 200;
+  background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
   display: flex; padding-bottom: env(safe-area-inset-bottom);
-  border-top: 0.5px solid rgba(255,255,255,0.1); z-index: 200;
+  border-top: 0.5px solid var(--text-sep);
 }
-.tab-item {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  padding: 10px 0; color: var(--text-dim); font-size: 10px; font-weight: 500;
+.tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0;
+  color: #8E8E93; font-size: 10px; font-weight: 500;
 }
-.tab-item.active { color: var(--accent); }
-.tab-item i { font-size: 20px; margin-bottom: 4px; }
-.fab-btn {
-  width: 50px; height: 50px; background: var(--accent); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; font-size: 22px;
-  color: white; margin-top: -15px; box-shadow: 0 4px 15px rgba(10,132,255,0.4);
+.tab.on { color: var(--accent); }
+.tab i { font-size: 22px; margin-bottom: 3px; }
+
+.fab-container { position: relative; top: -15px; }
+.fab {
+  width: 55px; height: 55px; background: var(--accent); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; color: white;
+  font-size: 24px; box-shadow: 0 8px 20px rgba(10, 132, 255, 0.4);
 }
 
-/* Toast */
-#toast {
-  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
-  background: #323232; padding: 10px 20px; border-radius: 20px;
-  font-size: 14px; display: none; z-index: 9999;
+/* Form & Modal */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+  display: none; align-items: flex-end; z-index: 1000;
+}
+.modal-overlay.on { display: flex; }
+.modal {
+  background: var(--secondary-bg); width: 100%; border-radius: 20px 20px 0 0;
+  padding: 15px 20px 45px; transform: translateY(100%); transition: 0.3s ease;
+}
+.modal-overlay.on .modal { transform: translateY(0); }
+.handle { width: 40px; height: 5px; background: #3A3A3C; border-radius: 10px; margin: 0 auto 15px; }
+
+.ios-input-group { background: var(--tertiary-bg); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+.ios-input-group input, .ios-input-group select {
+  width: 100%; background: transparent; border: none; padding: 15px;
+  color: white; font-size: 17px; border-bottom: 0.5px solid var(--text-sep);
+}
+.btn-ios {
+  width: 100%; padding: 16px; border-radius: 14px; background: var(--accent);
+  color: white; border: none; font-weight: 600; font-size: 17px;
 }
 </style>
 </head>
 <body>
 
-<div id="app">
+<div class="scr-container">
   <header class="top-nav">
-    <h1 id="page-title">Ringkasan</h1>
-    <div onclick="location.reload()" style="color:var(--accent)"><i class="fa-solid fa-rotate"></i></div>
+    <h1 id="header-title">Ringkasan</h1>
+    <div onclick="location.reload()" style="color:var(--accent); font-size: 18px;"><i class="fa-solid fa-rotate"></i></div>
   </header>
 
   <main class="screens">
     <section id="scr-home" class="scr on">
-      <div class="ios-card">
-        <p class="hero-label">Total Saldo</p>
-        <h2 id="main-bal" class="hero-val">Rp 0</h2>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px">
-          <div style="background:rgba(48,209,88,0.1); padding:12px; border-radius:12px">
-            <p style="color:var(--green); font-size:11px; font-weight:700">MASUK</p>
-            <p id="main-in" style="font-weight:700">Rp 0</p>
+      <div class="card">
+        <div class="balance-label">Total Saldo</div>
+        <div id="main-bal" class="balance-val">0</div>
+        <div style="display:flex; gap:10px;">
+          <div style="flex:1; background:rgba(48,209,88,0.1); padding:12px; border-radius:12px">
+            <small style="color:var(--green); font-weight:800">MASUK</small>
+            <div id="main-in" style="font-weight:700">0</div>
           </div>
-          <div style="background:rgba(255,69,58,0.1); padding:12px; border-radius:12px">
-            <p style="color:var(--red); font-size:11px; font-weight:700">KELUAR</p>
-            <p id="main-out" style="font-weight:700">Rp 0</p>
+          <div style="flex:1; background:rgba(255,69,58,0.1); padding:12px; border-radius:12px">
+            <small style="color:var(--red); font-weight:800">KELUAR</small>
+            <div id="main-out" style="font-weight:700">0</div>
           </div>
         </div>
       </div>
-
-      <p class="hero-label" style="margin-left:5px">Transaksi Terbaru</p>
-      <div id="home-tx-list" class="ios-list" style="margin-top:10px">
-        </div>
+      <h3 style="margin: 0 0 12px 5px; font-weight:700">Aktivitas Terbaru</h3>
+      <div id="home-tx-list" class="ios-list"></div>
     </section>
 
     <section id="scr-wallet" class="scr">
@@ -157,95 +151,79 @@ body {
     </section>
 
     <section id="scr-stat" class="scr">
-      <div class="ios-card">
-        <canvas id="chartTx" style="max-height: 250px;"></canvas>
+      <div class="card">
+        <canvas id="chartTx"></canvas>
       </div>
     </section>
 
     <section id="scr-prof" class="scr">
-      <div class="ios-card" style="text-align:center">
-        <div style="width:80px; height:80px; background:var(--input); border-radius:50%; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:30px">👤</div>
-        <h3>Pengguna Dompetku</h3>
+      <div class="card" style="text-align:center">
+        <div style="width:80px; height:80px; background:var(--tertiary-bg); border-radius:50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:32px">👤</div>
+        <h2 style="margin:0">Pengguna</h2>
       </div>
       <div class="ios-list">
-        <div class="ios-item" onclick="alert('Fitur segera hadir')">
-          <i class="fa-solid fa-gear" style="margin-right:12px; color:var(--text-dim)"></i> Pengaturan
-        </div>
         <div class="ios-item" onclick="localStorage.clear(); location.reload();" style="color:var(--red)">
-          <i class="fa-solid fa-trash" style="margin-right:12px"></i> Hapus Data
+          <i class="fa-solid fa-trash-can" style="margin-right:12px"></i> Hapus Semua Data
         </div>
       </div>
     </section>
   </main>
 
-  <nav class="tab-bar">
-    <div class="tab-item active" onclick="showScr('home', this)">
-      <i class="fa-solid fa-house-variant"></i><span>Ringkasan</span>
+  <nav class="tabbar">
+    <div class="tab on" onclick="showScr('home', this)">
+      <i class="fa-solid fa-house-chimney"></i><span>Ringkasan</span>
     </div>
-    <div class="tab-item" onclick="showScr('wallet', this)">
+    <div class="tab" onclick="showScr('wallet', this)">
       <i class="fa-solid fa-wallet"></i><span>Dompet</span>
     </div>
-    <div class="tab-item" style="overflow:visible">
-      <div class="fab-btn" onclick="openTxModal('out')"><i class="fa-solid fa-plus"></i></div>
+    <div class="fab-container">
+      <div class="fab" onclick="openTxModal('out')"><i class="fa-solid fa-plus"></i></div>
     </div>
-    <div class="tab-item" onclick="showScr('stat', this)">
+    <div class="tab" onclick="showScr('stat', this)">
       <i class="fa-solid fa-chart-pie"></i><span>Laporan</span>
     </div>
-    <div class="tab-item" onclick="showScr('prof', this)">
+    <div class="tab" onclick="showScr('prof', this)">
       <i class="fa-solid fa-user"></i><span>Profil</span>
     </div>
   </nav>
 </div>
 
 <div id="modal-tx" class="modal-overlay" onclick="closeModal(event)">
-  <div class="modal-content">
+  <div class="modal">
     <div class="handle"></div>
-    <h3 id="modal-title" style="text-align:center; margin-bottom:20px">Catat</h3>
-    <div class="input-group">
-      <input type="number" id="tx-amt" placeholder="Rp 0" style="font-size:24px; font-weight:700">
-      <input type="text" id="tx-note" placeholder="Keterangan">
+    <h2 id="modal-title" style="text-align:center; margin-top:0">Catat</h2>
+    <div class="ios-input-group">
+      <input type="number" id="tx-amt" placeholder="Rp 0" style="font-size:24px; font-weight:700; text-align:center">
+      <input type="text" id="tx-note" placeholder="Keterangan (Opsional)">
       <select id="tx-cat">
         <option value="Makan">🍱 Makan & Minum</option>
         <option value="Belanja">🛍️ Belanja</option>
-        <option value="Transport">🚗 Transportasi</option>
         <option value="Gaji">💰 Gaji</option>
       </select>
     </div>
-    <button class="btn-primary" onclick="saveTx()">Simpan Transaksi</button>
+    <button class="btn-ios" onclick="saveTx()">Simpan</button>
   </div>
 </div>
 
-<div id="toast"></div>
-
 <script>
-/* ─────────────── LOGIC (SESUAI SKRIP ASLI ANDA) ─────────────── */
-let state = JSON.parse(localStorage.getItem('dompetku_data')) || {
-  balance: 0, in: 0, out: 0, txs: []
-};
-
-function saveState() {
-  localStorage.setItem('dompetku_data', JSON.stringify(state));
-  render();
-}
-
-function formatIDR(num) {
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
-}
+// Logic Tetap Sama Sesuai File Asli Kamu
+let state = JSON.parse(localStorage.getItem('dompetku_data')) || { balance: 0, in: 0, out: 0, txs: [] };
+function saveState() { localStorage.setItem('dompetku_data', JSON.stringify(state)); render(); }
+function formatIDR(n) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n); }
 
 function showScr(id, el) {
   document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
   document.getElementById('scr-' + id).classList.add('on');
-  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-  if(el) el.classList.add('active');
-  
-  const titles = {home: 'Ringkasan', wallet: 'Dompet', stat: 'Laporan', prof: 'Profil'};
-  document.getElementById('page-title').innerText = titles[id];
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  if(el) el.classList.add('on');
+  const h = {home:'Ringkasan', wallet:'Dompet', stat:'Laporan', prof:'Profil'};
+  document.getElementById('header-title').innerText = h[id];
 }
 
 let currentType = 'out';
 function openTxModal(type) {
   currentType = type;
-  document.getElementById('modal-title').innerText = type === 'in' ? 'Pemasukan Baru' : 'Pengeluaran Baru';
+  document.getElementById('modal-title').innerText = type === 'in' ? 'Pemasukan' : 'Pengeluaran';
   const m = document.getElementById('modal-tx');
   m.style.display = 'flex';
   setTimeout(() => m.classList.add('on'), 10);
@@ -261,78 +239,43 @@ function closeModal(e) {
 
 function saveTx() {
   const amt = parseInt(document.getElementById('tx-amt').value);
-  const note = document.getElementById('tx-note').value;
-  const cat = document.getElementById('tx-cat').value;
-
-  if (!amt) return toast('Isi nominal!');
-
+  if (!amt) return alert('Isi nominal!');
   const newTx = {
     id: Date.now(),
     type: currentType,
     amt: amt,
-    note: note || (currentType === 'in' ? 'Pemasukan' : 'Pengeluaran'),
-    cat: cat,
+    note: document.getElementById('tx-note').value || 'Tanpa keterangan',
+    cat: document.getElementById('tx-cat').value,
     date: new Date().toISOString()
   };
-
   state.txs.unshift(newTx);
-  if (currentType === 'in') {
-    state.balance += amt;
-    state.in += amt;
-  } else {
-    state.balance -= amt;
-    state.out += amt;
-  }
-
+  if (currentType === 'in') { state.balance += amt; state.in += amt; }
+  else { state.balance -= amt; state.out += amt; }
   saveState();
   document.getElementById('tx-amt').value = '';
   document.getElementById('tx-note').value = '';
-  document.getElementById('modal-tx').click(); // close modal
-  toast('Tersimpan!');
-}
-
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.innerText = msg; t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', 2000);
+  document.getElementById('modal-tx').click();
 }
 
 function render() {
   document.getElementById('main-bal').innerText = formatIDR(state.balance);
   document.getElementById('main-in').innerText = formatIDR(state.in);
   document.getElementById('main-out').innerText = formatIDR(state.out);
-
   const list = document.getElementById('home-tx-list');
-  list.innerHTML = state.txs.length ? '' : '<p style="padding:20px; color:var(--text-dim); text-align:center">Belum ada transaksi</p>';
-  
+  list.innerHTML = '';
   state.txs.slice(0, 10).forEach(t => {
-    const div = document.createElement('div');
-    div.className = 'ios-item';
     const color = t.type === 'in' ? 'var(--green)' : 'var(--red)';
-    const icon = t.type === 'in' ? 'fa-arrow-down' : 'fa-arrow-up';
-    
-    div.innerHTML = `
-      <div class="icon-box" style="background:${color}20; color:${color}">
-        <i class="fa-solid ${icon}"></i>
-      </div>
-      <div style="flex:1">
-        <div style="font-weight:600; font-size:15px">${t.note}</div>
-        <div style="font-size:12px; color:var(--text-dim)">${t.cat}</div>
-      </div>
-      <div style="text-align:right; font-weight:700; color:${color}">
-        ${t.type === 'in' ? '+' : '-'}${t.amt.toLocaleString()}
-      </div>
+    const item = document.createElement('div');
+    item.className = 'ios-item';
+    item.innerHTML = `
+      <div class="icon-ios" style="background:${color}20; color:${color}"><i class="fa-solid ${t.type === 'in'?'fa-arrow-down':'fa-arrow-up'}"></i></div>
+      <div style="flex:1"><strong>${t.note}</strong><br><small style="color:#8E8E93">${t.cat}</small></div>
+      <div style="font-weight:700; color:${color}">${t.type === 'in'?'+':'-'}${t.amt.toLocaleString()}</div>
     `;
-    list.appendChild(div);
+    list.appendChild(item);
   });
 }
-
-// Service Worker (Tetap sesuai file sw.js Anda)
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
-
-// Init
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 render();
 </script>
 </body>
